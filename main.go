@@ -30,6 +30,7 @@ func _evaluationGenom(genom []int) int {
 	return total
 }
 
+// insertEvalutionGenoms genomを評価する(slieceのindexを返り値とする)
 func insertEvaluationGenom(genoms [][]int) []int {
 	var b []int
 	asd := make(map[int]int)
@@ -80,10 +81,25 @@ func CrossoverOfGenes(s1 []int, s2 []int) []int {
 	s3 := append(a, b...)
 	return s3
 }
+
+func some(s1 [][]int) func() [][]int {
+	s2 := insertEvaluationGenom(s1)
+	return func() [][]int {
+		s3 := [][]int{}
+		s3 = append(s3, s1[s2[0]])
+		s3 = append(s3, s1[s2[1]])
+		s3 = append(s3, CrossoverOfGenes(s1[s2[0]], s1[s2[1]]))
+		s3 = append(s3, CrossoverOfGenes(s1[s2[0]], s1[s2[2]]))
+		return s3
+	}
+}
 func main() {
 
 	s1 := mkaeRandGenom(4, 4)
-	fmt.Println(s1)
-	// fmt.Println(CrossoverOfGenes(s1[0], s1[1]))
-	fmt.Println(insertEvaluationGenom(s1))
+
+	a := some(s1)
+	count := 3
+	for i := 0; i < count; i++ {
+		fmt.Println(a())
+	}
 }
